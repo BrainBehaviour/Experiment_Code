@@ -2,6 +2,8 @@
 
 A modified response-priming paradigm employed in stroke patients presenting with chronic low function upper-limb hemiparesis, whilst EEG was recorded.
 
+NB: No Invalid trials, only neutral (ambiguous) trials. And added No Response Trials (all Valid)
+
 _Experiment setup:_
 
 	Four white precue stimuli (S1) presented within an empty line-drawn white circle on a black background: 
