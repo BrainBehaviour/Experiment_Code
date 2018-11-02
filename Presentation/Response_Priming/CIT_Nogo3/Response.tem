@@ -1,0 +1,17 @@
+trial{
+      trial_duration = $trialduration;
+      trial_type = first_response;          
+      incorrect_feedback = $WrongFeedbackTrialName;
+      no_response_feedback = $NoFeedbackTrialName;
+      correct_feedback = $CorrectFeedbackTrialName;
+      
+      picture{
+            bitmap $CueName;
+            x = 0; y = 0;
+      };
+      deltat = 0;
+      duration = $trialduration; 
+      target_button = $ButtonNumber;
+
+      code = $CueCode;
+}$ResponseTrialName;
