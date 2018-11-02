@@ -1,0 +1,14 @@
+trial{
+   trial_duration = forever;
+   trial_type = first_response;
+   all_responses = true;
+   picture {
+         text $stext;
+         x = 0; y = 0;
+   };
+   deltat = 25;
+   duration = response;
+
+   code = $scode;  
+   
+}$IntroName;

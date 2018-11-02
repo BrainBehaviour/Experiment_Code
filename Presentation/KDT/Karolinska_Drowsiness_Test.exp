@@ -1,0 +1,284 @@
+<ver>11</ver>
+<efn>C:\Presentation\Presentation Code\Karolinska Drowsiness Test\Karolinska_Drowsiness_Test.exp</efn>
+<author></author>
+<con>
+<pause>P</pause>
+<pause_code></pause_code>
+<port1>1</port1>
+<quit>Q</quit>
+<quit_code></quit_code>
+<resume>R</resume>
+<resume_code></resume_code>
+<send_output>0</send_output>
+<start_code></start_code>
+</con>
+<dbi></dbi>
+<dbs>button</dbs>
+<ddi>0</ddi>
+<dds>
+<icm_profile></icm_profile>
+<use_icm>0</use_icm>
+</dds>
+<ddv>Primary Display Driver</ddv>
+<display_status_window>1</display_status_window>
+<dmd>0</dmd>
+<dmh>0</dmh>
+<dmr>1</dmr>
+<dmw>0</dmw>
+<dsd>C:\Presentation\Presentation Code\Karolinska Drowsiness Test\Bitmaps</dsd>
+<dxv>8</dxv>
+<efs>
+<filename>C:\Presentation\Presentation Code\Karolinska Drowsiness Test\Karolinska_Drowsiness_Test.sce</filename>
+</efs>
+<font_settings>
+<dpi>96</dpi>
+<font_smooth>1</font_smooth>
+<use_dpi>1</use_dpi>
+<use_font_smooth>1</use_font_smooth>
+</font_settings>
+<idt>1000</idt>
+<ip_chans>
+<chan>
+<dsdi>1</dsdi>
+<dsi>1</dsi>
+<dsn>Status port</dsn>
+<dst>0</dst>
+<il>1</il>
+<iv>0</iv>
+<ivm>0</ivm>
+<mask></mask>
+<name>Trigger Channel</name>
+<piai>LPT1</piai>
+<pian>Parallel Port</pian>
+<pihpn>LPT1</pihpn>
+<pindex>1</pindex>
+<ui>0</ui>
+</chan>
+<chan>
+<dsdi>1</dsdi>
+<dsi>1</dsi>
+<dsn>Status port</dsn>
+<dst>0</dst>
+<il>1</il>
+<iv>0</iv>
+<ivm>255</ivm>
+<mask></mask>
+<name>Parallel Response Channel</name>
+<piai>LPT1</piai>
+<pian>Parallel Port</pian>
+<pihpn>LPT1</pihpn>
+<pindex>1</pindex>
+<ui>0</ui>
+</chan>
+</ip_chans>
+<isb>10000</isb>
+<lfd>C:\Presentation\Logfiles\Karolinska Drowsiness Test</lfd>
+<lnb>2</lnb>
+<lno>1</lno>
+<log>
+<append_counter>0</append_counter>
+<delimiter>9</delimiter>
+<general_list>1</general_list>
+<set_def_file></set_def_file>
+<stimulus_list>0</stimulus_list>
+<subject_id></subject_id>
+<subject_id_pol>0</subject_id_pol>
+<video_list>0</video_list>
+</log>
+<lol>1</lol>
+<lpr>Test_</lpr>
+<mss>4</mss>
+<nam>Karolinska Drowsiness Test</nam>
+<one_processor>2</one_processor>
+<oports>
+<p>
+<dsdi>0</dsdi>
+<dsi>0</dsi>
+<dsn>Data port</dsn>
+<igm>0</igm>
+<il>0</il>
+<ivm>0</ivm>
+<piai>LPT1</piai>
+<pian>Parallel Port</pian>
+<pihpn>LPT1</pihpn>
+<pindex>1</pindex>
+<rs>1</rs>
+</p>
+</oports>
+<out_encrypt_key></out_encrypt_key>
+<pi_list>
+<ip>
+<cn>Parallel Response Channel</cn>
+<lc>1</lc>
+</ip>
+</pi_list>
+<port_devices>
+<device>
+<parameters>
+<cts>0</cts>
+<dsrin>0</dsrin>
+<dsrout>0</dsrout>
+<dtr>disable</dtr>
+<rts>disable</rts>
+<set_fifo>1</set_fifo>
+<spd></spd>
+<spp></spp>
+<spr></spr>
+<sps></sps>
+</parameters>
+<piai>COM1</piai>
+<pian>Serial Port</pian>
+<pihpn>COM1</pihpn>
+</device>
+</port_devices>
+<rdl>
+<device>
+<axis>
+<max>1000</max>
+<min>-1000</min>
+<name>X-axis</name>
+<restricted>1</restricted>
+<scale>1</scale>
+</axis>
+<axis>
+<max>1000</max>
+<min>-1000</min>
+<name>Y-axis</name>
+<restricted>1</restricted>
+<scale>1</scale>
+</axis>
+<axis>
+<max>1000</max>
+<min>-1000</min>
+<name>Wheel</name>
+<restricted>1</restricted>
+<scale>1</scale>
+</axis>
+<device_type>2</device_type>
+<dx_device_type>18</dx_device_type>
+<name>Mouse</name>
+</device>
+<device>
+<axis>
+<dead_zone>0</dead_zone>
+<max>1000</max>
+<min>-1000</min>
+<name>X-axis</name>
+<saturation>1</saturation>
+</axis>
+<axis>
+<dead_zone>0</dead_zone>
+<max>1000</max>
+<min>-1000</min>
+<name>Y-axis</name>
+<saturation>1</saturation>
+</axis>
+<device_type>6</device_type>
+<dx_device_type>0</dx_device_type>
+<name>gameport device</name>
+</device>
+<device>
+<axis>
+<max>1000</max>
+<min>-1000</min>
+<name>x</name>
+<restricted>1</restricted>
+<scale>1</scale>
+</axis>
+<axis>
+<max>1000</max>
+<min>-1000</min>
+<name>y</name>
+<restricted>1</restricted>
+<scale>1</scale>
+</axis>
+<device_type>5</device_type>
+<dx_device_type>0</dx_device_type>
+<name>pointing device</name>
+</device>
+<device>
+<cn>Parallel Response Channel</cn>
+<device_type>11</device_type>
+<dif>100</dif>
+<dtf>1</dtf>
+<dx_device_type>0</dx_device_type>
+<name>parallel port device</name>
+<rr></rr>
+</device>
+</rdl>
+<rep>1</rep>
+<require_name_match>0</require_name_match>
+<rts>1</rts>
+<sbs>100000</sbs>
+<sce>
+<sfn>all_scenarios</sfn>
+</sce>
+<sce>
+<idv>
+<device_type>11</device_type>
+<dx_device_type>0</dx_device_type>
+<ibn>3 (start)</ibn>
+<ibn>2 (start)</ibn>
+<idn>parallel port device</idn>
+<offset>4</offset>
+<offset>2</offset>
+</idv>
+<idv>
+<device_type>2</device_type>
+<dx_device_type>18</dx_device_type>
+<ibn>Button 0</ibn>
+<ibn>Button 1</ibn>
+<idn>Mouse</idn>
+<offset>12</offset>
+<offset>13</offset>
+</idv>
+<sfn>C:\Presentation\Presentation Code\Karolinska Drowsiness Test\Karolinska_Drowsiness_Test.sce</sfn>
+</sce>
+<sct>
+<capture_device>
+<bps></bps>
+<chan></chan>
+<do_rec_vol>0</do_rec_vol>
+<freq></freq>
+<name>None</name>
+<rec_vol>1</rec_vol>
+</capture_device>
+<resp_dev>
+<combine>0</combine>
+<ignore></ignore>
+<rec_dur></rec_dur>
+<save>0</save>
+<thresh></thresh>
+</resp_dev>
+</sct>
+<sde>
+<buffer_length>1000</buffer_length>
+<custom_buf>sec_hw</custom_buf>
+<halt_on_underrun>1</halt_on_underrun>
+<max_mix_length>400</max_mix_length>
+<min_mix_length>100</min_mix_length>
+<mixer>dx_software</mixer>
+<rewind_distance>10</rewind_distance>
+<side_speakers>1</side_speakers>
+</sde>
+<sdv>None</sdv>
+<smc>2</smc>
+<smd>16</smd>
+<smr>44100</smr>
+<srs>1</srs>
+<ssb>2000</ssb>
+<svl>
+<attenuation>0</attenuation>
+<do_attenuation>0</do_attenuation>
+<do_volume>0</do_volume>
+<volume>1</volume>
+</svl>
+<text_encoding>utf8</text_encoding>
+<trigger_mode>
+<cn>Trigger Channel</cn>
+<v></v>
+</trigger_mode>
+<udt>0</udt>
+<unc>0</unc>
+<upb>0</upb>
+<urp>1</urp>
