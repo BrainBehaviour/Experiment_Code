@@ -1,0 +1,296 @@
+# Constants
+int BLOCK_COUNT = 5;
+int TRIALS_PER_BLOCK = 60;
+int TRAINING_TRIALS_COUNT = 14;
+
+# Variable
+int num_correct;
+
+# Training arrays
+array <trial> training[TRAINING_TRIALS_COUNT];
+# Left and right
+training[1] = PrimeR_R;
+training[2] = PrimeR_R;
+training[3] = PrimeL_L;
+training[4] = PrimeL_L;
+
+# Neutral
+#training[5] = PrimeN_R;
+#training[6] = PrimeN_R;
+#training[7] = PrimeN_L;
+#training[8] = PrimeN_L;
+
+# Nogo
+training[5] = PrimeNo_No;
+training[6] = PrimeNo_No;
+# InValid Primes
+training[7] = PrimeR_L;
+training[8] = PrimeR_L;
+training[9] = PrimeL_R;
+training[10] = PrimeL_R;
+training[11] = PrimeNo_R;
+training[12] = PrimeNo_R;
+training[13] = PrimeNo_L;
+training[14] = PrimeNo_L;
+
+#training[15] = PrimeR_No;
+#training[16] = PrimeR_No;
+#training[17] = PrimeL_No;
+#training[18] = PrimeL_No;
+#training[19] = PrimeN_No;
+#training[20] = PrimeN_No;
+
+
+# Experimental arrays
+
+# 12 different trial types
+array <trial> exp_trial[7];
+exp_trial[1] = PrimeR_R;          # Valid Right
+exp_trial[2] = PrimeL_L;          # Valid Left
+exp_trial[3] = PrimeR_L;          # Right -> Left
+exp_trial[4] = PrimeL_R;          # Left -> Right
+exp_trial[5] = PrimeNo_No;        # No -> No
+exp_trial[6] = PrimeNo_R;         # No -> Right
+exp_trial[7] = PrimeNo_L;         # No -> Left
+
+#exp_trial[5] = PrimeN_R;          # Neutral -> Right
+#exp_trial[6] = PrimeN_L;          # Neutral -> Left
+#exp_trial[10] = PrimeN_No;        # Neutral -> No
+#exp_trial[11] = PrimeR_No;        # Right -> No
+#exp_trial[12] = PrimeL_No;        # Left -> No
+
+# weights for each trial type
+array <int> weights[7];   
+weights[1] = 16;                   # Valid Right
+weights[2] = 16;                   # Valid Left
+weights[3] = 4;                    # Right -> Left
+weights[4] = 4;                    # Left -> Right
+weights[5] = 16;                   # No -> No
+weights[6] = 2;                    # No -> Right
+weights[7] = 2;                    # No -> Left
+
+#weights[5] = 10;                   # Neutral -> Right
+#weights[6] = 10;                   # Neutral -> Left
+#weights[10] = 10;                  # Neutral -> No
+#weights[11] = 3;                   # Right -> No
+#weights[12] = 3;                   # Left -> No
+
+
+# Block array (60 trials)
+array <trial> block[TRIALS_PER_BLOCK];          # ***** This is the number of trials per block *****
+
+# Fill the block initially with the number of trials of each type required
+int abs_trial_no = 1;
+loop int i = 1;
+until i > 7 begin                 # ***** This is the number of types of trial *****
+   loop int j = 1; 
+   until j > weights[i] begin      # loop count is the weight for this type
+   block[abs_trial_no] = exp_trial[i];
+   j = j + 1;
+   abs_trial_no = abs_trial_no + 1;
+   end; 
+i = i + 1;
+end;
+
+# then shuffle the order
+block.shuffle();
+
+# main intros
+Intro1.present();
+Intro2.present();
+
+# Training Trials
+bool intro_shown = false;       
+loop int training_num = 1;
+until training_num > TRAINING_TRIALS_COUNT begin        # ***** This is the TOTAL number of training trials *****
+
+   # Show intro 3 before left-right training
+   if (training_num == 1) then      # Training trial 1 is the first left-right trial
+      if (intro_shown == false) then
+         Intro3.present();
+         intro_shown = true;
+      end;
+   end;
+   
+   # Show intro 4 before neutral training
+  #if (training_num == 5) then      # Training trial 5 is the first neutral trial
+     #if (intro_shown == false) then
+        #Intro4.present();
+        #intro_shown = true;
+     #end;
+  #end;
+   
+   # Show intro 5 before nogo training
+   if (training_num == 5) then     # Training trial 5 is the first nogo trial
+      if (intro_shown == false) then
+         Intro5.present();
+         intro_shown = true;
+      end;
+   end;
+                                          
+   # Show intro 6 before Invalid Training
+    if (training_num == 7) then     # Training trial 7 is the first invalid trial
+      if (intro_shown == false) then
+         Intro6.present();
+         intro_shown = true;
+      end;
+   end;
+                                          
+   # Present the appropriate training trial
+   training[training_num].present();
+            
+   # Only increment the trial number if the person got it right. This means the training trials
+   # will loop until the response is correct
+   if (bool( stimulus_manager.stimulus_count() )) then
+      stimulus_data last = stimulus_manager.get_stimulus_data( stimulus_manager.stimulus_count() - 1);
+     
+      if (last.event_code() == " T 50") then
+         training_num = training_num + 1;
+         intro_shown = false;                # Also set intro shown to false here so the next
+      end;                                   # intro will be shown when appropriate
+      if (last.event_code() == " T 51") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      if (last.event_code() == " T 52") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      if (last.event_code() == " T 53") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+     #if (last.event_code() == " T 54") then
+        #training_num = training_num + 1;
+        #intro_shown = false;  
+     #end;
+     #if (last.event_code() == " T 55") then
+        #training_num = training_num + 1;
+        #intro_shown = false;   
+     #end;
+      if (last.event_code() == " T 56") then
+         training_num = training_num + 1;
+         intro_shown = false;   
+      end;
+      if (last.event_code() == " T 57") then
+         training_num = training_num + 1;
+         intro_shown = false;   
+      end;
+      if (last.event_code() == " T 58") then
+         training_num = training_num + 1;
+         intro_shown = false;   
+      end;
+     #if (last.event_code() == " T 59") then
+        #training_num = training_num + 1;
+        #intro_shown = false;   
+     #end;
+     #if (last.event_code() == " T 60") then
+        #training_num = training_num + 1;
+        #intro_shown = false;   
+     #end;
+     #if (last.event_code() == " T 61") then
+        #training_num = training_num + 1;
+        #intro_shown = false;   
+     #end;
+      
+   end; # end of if
+
+end; # end of loop
+
+# Experiment intro
+loop until (response_manager.last_response() == 4) begin
+  Intro7.present();
+end;
+ResumeTrial.present();
+
+# Experiment
+
+# Blocks
+loop int block_num = 1;
+until block_num > BLOCK_COUNT begin        # ***** This is the number of blocks *****
+
+   # Reset num correct counter at the start of the block
+   num_correct = 0;
+   
+   # Loop through all trials
+   loop int i = 1;
+   until i > TRIALS_PER_BLOCK  begin            # ***** This is the number of trials per block *****
+
+      block[i].present();
+   
+      # Increment num correct if appropriate
+      if (bool( stimulus_manager.stimulus_count() )) then
+         stimulus_data last = stimulus_manager.get_stimulus_data( stimulus_manager.stimulus_count() - 1);
+        
+         if (last.event_code() == " T 50") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 51") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 52") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 53") then
+            num_correct = num_correct + 1
+         end;
+        #if (last.event_code() == " T 54") then
+           #num_correct = num_correct + 1
+        #end;
+        #if (last.event_code() == " T 55") then
+           #num_correct = num_correct + 1
+        #end;
+         if (last.event_code() == " T 56") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 57") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 58") then
+            num_correct = num_correct + 1
+         end;
+        #if (last.event_code() == " T 59") then
+           #num_correct = num_correct + 1
+        #end;
+        #if (last.event_code() == " T 60") then
+           #num_correct = num_correct + 1
+        #end;
+        #if (last.event_code() == " T 61") then
+           #num_correct = num_correct + 1
+        #end;
+      end;
+
+      # Check to see if "Stop" mouse button was pressed      
+      if (response_manager.last_response() == 3) then
+          # If so then show pause trial and wait for the "Go" mouse button
+          loop until (response_manager.last_response() == 4) begin
+            PauseTrial.present();
+          end; 
+          ResumeTrial.present();
+      end;
+      
+      # Loop round each trial   
+      i = i + 1;
+   end;    
+
+# store the percent correct in the text
+PercentCorrect.set_caption(string((num_correct * 100) / TRIALS_PER_BLOCK));
+PercentCorrect.redraw();
+
+# store the block number in the text
+BlockNumber.set_caption(string(block_num));
+BlockNumber.redraw();
+
+# show the end of block trial
+loop until (response_manager.last_response() == 4) begin
+  EndTrial.present();
+end;                  
+ResumeTrial.present();
+
+# reshuffle the trials
+block.shuffle();
+
+# loop to next 
+block_num = block_num + 1
+end;
+

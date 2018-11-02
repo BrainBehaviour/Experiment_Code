@@ -1,0 +1,19 @@
+trial{                     
+     trial_type = correct_response;
+     picture {
+            text $Feedback;
+            x = 0; y = 0;
+      };
+     code = $FeedbackCode;   
+     duration = 500;
+     
+     # Grey screen
+     picture {
+            background_color = 80, 80, 80;
+     };
+     deltat = 500;
+     port_code = $FeedbackPortCode;  
+     target_button = 3;
+     duration = 200; 
+     
+  }$FeedbackName; 

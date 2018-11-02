@@ -1,0 +1,34 @@
+trial{
+      trial_duration = 1800;
+      trial_type = first_response;         
+      incorrect_feedback = toofast;
+      correct_feedback = toofast;
+      no_response_feedback = $CueTrialName;
+      
+      picture {
+            bitmap Open_Circle;
+            x = 0; y = 0;
+      };
+      deltat = 0;
+      duration = 500;
+      target_button = 1;
+      
+      picture {
+            bitmap $PrimeName;
+            x = 0; y = 0;
+      };
+      deltat = 500;
+      duration = 150;
+      target_button = 1;
+      
+      picture {
+            bitmap Open_Circle;
+            x = 0; y = 0;
+      };
+      deltat = 150;
+      duration = 1150;
+      target_button = 1;
+            
+      code = $PrimeCode;
+      port_code = $PrimePortCode;
+}$PrimeTrialName;
