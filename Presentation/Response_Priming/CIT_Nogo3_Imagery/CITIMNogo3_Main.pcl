@@ -1,0 +1,197 @@
+# Constants
+int BLOCK_COUNT = 8;
+int TRIALS_PER_BLOCK = 60;
+int TRAINING_TRIALS_COUNT = 10;
+
+# Variable
+int num_correct;
+
+# Training arrays
+array <trial> training[TRAINING_TRIALS_COUNT];
+# Left and right
+training[1] = IMPrimeR;
+training[2] = IMPrimeR;
+training[3] = IMPrimeL;
+training[4] = IMPrimeL;
+# Neutral
+training[5] = IMPrimeNR;
+training[6] = IMPrimeNR;
+training[7] = IMPrimeNL;
+training[8] = IMPrimeNL;
+# Nogo
+training[9] = IMPrimeNo;
+training[10] = IMPrimeNo;
+
+
+
+# Experimental arrays
+
+# 5 different trial types
+array <trial> exp_trial[5];
+exp_trial[1] = IMPrimeR;     # Imagine Valid Right
+exp_trial[2] = IMPrimeL;     # Imagine Valid Left
+exp_trial[3] = IMPrimeNR;    # Imagine Neutral -> Right
+exp_trial[4] = IMPrimeNL;    # Imagine Neutral -> Left
+exp_trial[5] = IMPrimeNo;    # Imagine Nogo
+
+# Block array (60 trials)
+array <trial> block[TRIALS_PER_BLOCK];
+
+# Fill the block initially with the number of trials of each type required
+loop int i = 1;
+until i > 5 begin
+   loop int j = 1; 
+   until j > 12 begin
+   block[((i-1) * 12) + j] = exp_trial[i];
+   j = j + 1;
+   end; 
+i = i + 1;
+end;
+
+# then shuffle the order
+block.shuffle();
+
+# main intros
+Intro1.present();
+Intro2.present();
+
+# Training Trials
+bool intro_shown = false;       
+loop int training_num = 1;
+until training_num > TRAINING_TRIALS_COUNT begin        # ***** This is the TOTAL number of training trials *****
+
+   # Show intro 3 before left-right training
+   if (training_num == 1) then      # Training trial 1 is the first left-right trial
+      if (intro_shown == false) then
+         Intro3.present();
+         intro_shown = true;
+      end;
+   end;
+   
+   # Show intro 4 before neutral training
+   if (training_num == 5) then      # Training trial 5 is the first neutral trial
+      if (intro_shown == false) then
+         Intro4.present();
+         intro_shown = true;
+      end;
+   end;
+   
+   # Show intro 5 before nogo training
+   if (training_num == 9) then     # Training trial 9 is the first nogo trial
+      if (intro_shown == false) then
+         Intro5.present();
+         intro_shown = true;
+      end;
+   end;
+   
+      
+   # Present the appropriate training trial
+   training[training_num].present();
+            
+   # Only increment the trial number if the person got it right. This means the training trials
+   # will loop until the response is correct
+   if (bool( stimulus_manager.stimulus_count() )) then
+      stimulus_data last = stimulus_manager.get_stimulus_data( stimulus_manager.stimulus_count() - 1);
+     
+      if (last.event_code() == " T 31") then
+         training_num = training_num + 1;
+         intro_shown = false;                # Also set intro shown to false here so the next
+      end;                                   # intro will be shown when appropriate
+      if (last.event_code() == " T 32") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      if (last.event_code() == " T 33") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      if (last.event_code() == " T 34") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      if (last.event_code() == " T 35") then
+         training_num = training_num + 1;
+         intro_shown = false;
+      end;
+      
+      
+   end; # end of if
+
+end; # end of loop
+
+# Experiment intro
+loop until (response_manager.last_response() == 4) begin
+  Intro6.present();
+end;
+ResumeTrial.present();
+
+# Experiment
+
+# Blocks
+loop int block_num = 1;
+until block_num > BLOCK_COUNT begin        # ***** This is the number of blocks *****
+
+   # Reset num correct counter at the start of the block
+   num_correct = 0;
+   
+   # Loop through all trials
+   loop int i = 1;
+   until i > TRIALS_PER_BLOCK  begin            # ***** This is the number of trials per block *****
+
+      block[i].present();
+   
+      # Increment num correct if appropriate
+      if (bool( stimulus_manager.stimulus_count() )) then
+         stimulus_data last = stimulus_manager.get_stimulus_data( stimulus_manager.stimulus_count() - 1);
+        
+         if (last.event_code() == " T 31") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 32") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 33") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 34") then
+            num_correct = num_correct + 1
+         end;
+         if (last.event_code() == " T 35") then
+            num_correct = num_correct + 1
+         end;
+      end;
+
+      # Check to see if "Stop" mouse button was pressed      
+      if (response_manager.last_response() == 3) then
+          # If so then show pause trial and wait for the "Go" mouse button
+          loop until (response_manager.last_response() == 4) begin
+            PauseTrial.present();
+          end; 
+          ResumeTrial.present();
+      end;
+      
+      # Loop round each trial   
+      i = i + 1;
+   end;    
+
+# store the percent correct in the text
+PercentCorrect.set_caption(string((num_correct * 100) / TRIALS_PER_BLOCK));
+PercentCorrect.redraw();
+
+# store the block number in the text
+BlockNumber.set_caption(string(block_num));
+BlockNumber.redraw();
+
+# show the end of block trial
+loop until (response_manager.last_response() == 4) begin
+  EndTrial.present();
+end;                  
+ResumeTrial.present();
+
+# reshuffle the trials
+block.shuffle();
+
+# loop to next 
+block_num = block_num + 1
+end;
+

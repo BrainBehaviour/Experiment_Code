@@ -1,0 +1,19 @@
+trial{
+      trial_duration = 30;
+      trial_type = first_response;          
+      incorrect_feedback = NoResponseRequired;
+      no_response_feedback = $ResponseTrialName;
+      correct_feedback = NoResponseRequired;
+      
+      picture{
+            bitmap $CueName;
+            x = 0; y = 0;
+      };
+      deltat = 0;
+      duration = next_picture; 
+      target_button = 1;
+
+      code = $CueCode;
+      port_code = $CuePortCode;
+      
+}$CueTrialName; 
