@@ -1,0 +1,57 @@
+# Constants
+int REPETITIONS = 5;
+
+# Sort the bitmaps
+Open_Circle_Centre.flip_vertically();
+Open_Circle_Left.flip_vertically();
+Open_Circle_Right.flip_vertically();
+Open_Circle_Top.flip_vertically();
+Open_Circle_Bottom.flip_vertically();
+Filled_Circle_Centre.flip_vertically();
+
+# Variable
+Intro1.present();
+
+OpenCircleCentre.present();
+OpenCircleLeft.present();
+OpenCircleCentre.present();
+OpenCircleRight.present();
+OpenCircleCentre.present();
+OpenCircleTop.present();
+OpenCircleCentre.present();
+OpenCircleBottom.present();
+OpenCircleCentre.present();
+FilledCircleCentre.present();
+OpenCircleCentre.present();
+FilledCircleCentre.present();
+OpenCircleCentre.present();
+
+Intro2.present();
+
+array <trial> block[6];
+block[1] = OpenCircleLeft;
+block[2] = OpenCircleRight;
+block[3] = OpenCircleTop;
+block[4] = OpenCircleBottom;
+block[5] = FilledCircleCentre;
+block[6] = FilledCircleCentre;
+
+block.shuffle();
+
+loop int i = 1 
+until i > REPETITIONS begin
+	if (i == 1) then
+		OpenCircleCentre.present();
+	end;
+	
+	loop int j = 1
+	until j > 6 begin
+		block[j].present();
+		OpenCircleCentre.present();
+	j = j + 1;
+	end;
+i = i + 1;
+block.shuffle();
+end;
+
+Intro3.present();

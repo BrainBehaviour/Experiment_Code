@@ -1,0 +1,15 @@
+trial{
+      trial_duration = 1000;
+      trial_type = first_response;          
+      
+      picture{
+            bitmap $BitmapName;
+            x = 0; y = 0;
+      };
+      deltat = 0;
+      duration = 1000; 
+
+      code = $Code;
+      port_code = $PortCode;
+      
+}$TrialName; 
