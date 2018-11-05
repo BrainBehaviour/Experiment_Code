@@ -21,7 +21,7 @@ For example:
 
 	nBack/README.md
 
-Within this Read me file write a title for your task, a description of the task, the version of presentation used, and any published papers using this task.
+Within this Read me file write a title for your task, a description of the task, the version of software used, and any published papers using this task.
 
 Then scroll down and press "Commit".
 
