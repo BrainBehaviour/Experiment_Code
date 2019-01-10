@@ -1,0 +1,663 @@
+preset string data_file;# name of text file to which rts and validity information is written
+
+preset int n_button; # button associated with the letter n
+preset int x_button; # button associated with the letter x
+
+################################################################################################################
+
+## presets - change these and the programme will adapt to the changes (no need to check the rest of the code)
+
+################################################################################################################
+
+int letter_count = 6;
+double letter_radius = 1.6;# radius between centre fixation and letter stimuli
+double arrow_radius = 0.34;# radius between centre of fixation and tip of arrrow
+int flanker_offset = 3;
+
+################################################################################################################
+
+
+# calculations for orientation of stimuli
+# split up whole radians into 8
+double angle_inc = (3.14159265*2.0)/double(letter_count);
+
+# initial angle of first stimulus
+double angle = 0.0 + angle_inc/2.0;
+
+array<double>arrow_coord[letter_count][2][2];# array of arrow coordinates, index a = orientation of arrow (1 = 3 o'clock position and increments in an anticlockwise fashion),
+# index b = the part of the arrow 1 = base, 2 = tip, index c = xy coords (1 = x, 2 = y); 
+
+## add arrow coordinates to the array
+
+loop
+int i = 1 until i > letter_count
+begin
+		
+	arrow_coord[i][1][1] = (cos(angle) * arrow_radius) - 2.0 * ((cos(angle) * arrow_radius));
+	arrow_coord[i][1][2] = (sin(angle) * arrow_radius) - 2.0 * ((sin(angle) * arrow_radius));
+	
+	arrow_coord[i][2][1] = cos(angle) * arrow_radius;
+	arrow_coord[i][2][2] = sin(angle) * arrow_radius;
+
+	term.print(arrow_coord[i][1][1]);
+	term.print("\n");
+	term.print(arrow_coord[i][1][2]);
+	term.print("\n");
+	term.print(arrow_coord[i][2][1]);
+	term.print("\n");
+	term.print(arrow_coord[i][2][2]);
+	term.print("\n");
+	term.print("\n");
+	
+angle = angle + angle_inc;
+term.print(angle);
+
+term.print("\n");
+term.print("\n");
+
+i = i + 1;
+end;
+
+array<string>code[5][3];
+code[1][1] = "X";
+code[1][2] = "N";
+code[2][1] = "uncued";
+code[2][2] = "cued";
+code[3][1] = "low";
+code[3][2] = "high";
+code[4][1] = "congruent";
+code[4][2] = "neutral";
+code[4][3] = "incongruent";
+code[5][1] = "left";
+code[5][2] = "right";
+
+array<text>target[2];
+target[1] = X;
+target[2] = N;
+
+array<text>distracter[2][7];
+distracter[1][1] = O;
+distracter[1][2] = O;
+distracter[1][3] = O;
+distracter[1][4] = O;
+distracter[1][5] = O;
+distracter[1][6] = O;
+distracter[1][7] = O;
+distracter[2][1] = K;
+distracter[2][2] = M;
+distracter[2][3] = Z;
+distracter[2][4] = W;
+distracter[2][5] = H;
+distracter[2][6] = V;
+distracter[2][7] = Y;
+
+# obtain index a of trial info by multiplying all the possible trial types from the first 5 dimensions
+# (target letter (2) * trial_type (2 (cue vs. uncue)) * p_load (2) * flanker (3) * flanker pos (2) = 48 trials
+# add another 36 elements for the 12 long training trials and the 24 short training trials
+
+array<int>trial_info[(48 * letter_count) * 3 + 36][6];# trial info array, index a = trial number, index b = info for that trial, (index 1 = target(1 = x or 2 = n)), 
+# index 2 = trial_type, (1 = uncued or 2 = cued), index 3 = perceptual load (1 = low,2  = high), 
+# index 4 = flanker type ( 1= congrunet, 2 = neutral, 3 = incongruent), index 5 = flanker position (1 = left, 2 = right), index 6 = target position (positions 1 - 8);
+
+int ii = 1;
+
+# long duration training trials
+
+loop # trial type, uncued or cued
+int i = 1 until i > 2
+begin
+
+	loop # perceptual load
+	int j = 1 until j > 2
+	begin
+		
+		loop # flanker type, congruent, neutral or incongruent
+		int k = 1 until k > 3
+		begin
+		
+			trial_info[ii][1] = random(1,2);
+			trial_info[ii][2] = i;
+			trial_info[ii][3] = j;
+			trial_info[ii][4] = k;
+			trial_info[ii][5] = random(1,2);
+			trial_info[ii][6] = random(1,letter_count);
+			
+			ii = ii + 1;
+	
+		k = k + 1;
+		end; # flanker type loop
+	
+	j = j + 1;
+	end;# perceptual load loop
+	
+i = i + 1;
+end;# end trial type loop
+
+# shuffle long warm up trials
+trial_info.shuffle(1, 12);
+
+# short duration training trials 
+
+loop # loop to get twice of each element
+int h = 1 until h > 2 
+begin
+
+	loop # trial type, uncued or cued
+	int i = 1 until i > 2
+	begin
+
+		loop # perceptual load
+		int j = 1 until j > 2
+		begin
+			
+			loop # flanker type, congruent, neutral or incongruent
+			int k = 1 until k > 3
+			begin
+			
+				trial_info[ii][1] = random(1,2);
+				trial_info[ii][2] = i;
+				trial_info[ii][3] = j;
+				trial_info[ii][4] = k;
+				trial_info[ii][5] = random(1,2);
+				trial_info[ii][6] = random(1, letter_count);
+
+				ii = ii + 1;
+		
+			k = k + 1;
+			end; # flanker type loop
+		
+		j = j + 1;
+		end;# perceptual load loop
+		
+	i = i + 1;
+	end;# end trial type loop
+
+h = h + 1;
+end;
+
+# shuffle short warm up trials
+trial_info.shuffle(13, 36);
+
+loop
+int i = 1 until i > 3 begin # create 3 lots of every trial type
+
+	loop 
+	int j = 1 until j > 2 begin # target x or n
+
+		loop int k = 1 until k > 2 begin	# trial type, cued or uncued
+		
+			loop int m = 1 until m > 2 begin	# perceptual load high or low
+				
+				loop int n = 1 until n > 3 begin # flanker type congruent, neutral, incongruent
+				
+					loop int p = 1 until p > 2 begin # flanker position left or right
+						
+						loop int q = 1 until q > letter_count begin
+					
+							trial_info[ii][1] = j; # target x or n
+							trial_info[ii][2] = k; # trial type uncued or cued
+							trial_info[ii][3] = m; # perceptual load
+							trial_info[ii][4] = n; # flanker type, congruent, neutral, incongruent
+							trial_info[ii][5] = p; # flanker position left or right
+							trial_info[ii][6] = q; # target position
+							
+							ii = ii + 1;	
+					
+						q = q + 1;
+						end;
+					
+					p = p + 1;
+					end;
+					
+				n = n + 1;
+				end;
+				
+			m = m + 1;
+			end;
+			
+		k = k + 1;
+		end;
+
+	j = j + 1;
+	end;
+
+i = i + 1;
+end;
+
+# shuffle the trial index for assessment trials, preserving the orde of elements in index 2
+trial_info.shuffle(37, trial_info.count());
+
+# print shuffled trial_info array to check order
+loop
+int i = 1 until i > trial_info.count() begin
+	
+	loop # trial info loop
+	int j = 1 until j > 6 begin
+		
+		#term.print("index" + string(i) + " " + string(j) + "	");
+		#term.print(trial_info[i][j]);
+		#term.print("\n");
+	j = j + 1;
+	end;
+	
+	#term.print("\n");
+i = i + 1;
+end;
+
+
+# open file to output the rts and error rates
+
+# open file here to see if it is possible to write the results prior to the experiment starting
+
+output_file behaviour = new output_file;
+behaviour.open( data_file + ".txt");  # define the file name for order file
+
+# create array to store the results of the calulations, seperate ones for 
+
+# indexes for the behavioural data arrays are as follows, index a = the cue type (1 = uncued, 2 = cued), index b = percept load (1 = low, 2 = high), 
+# index c = flanker type (1 = congruent, 2 = neutral, 3 = incongruent), index 4 = the trial
+
+# index d is to used as a reference to assessment trials so subtract the number of training trials from trial_info.count
+array<string>rt[2][2][3][(trial_info.count()-36)/12];# array to store the rts for each trial, if no response record an x for rts. convert rt info into string info 
+array<string>val[2][2][3][(trial_info.count()-36)/12];# array to store the error rates for each trial, store as correct, incorrect, no_response, can use excel to sort into early or late
+
+# inidexes to determine which trial to add the descriptive to
+array<int>op_ind[2][2][3];
+
+# start each index array at 1
+loop
+int i = 1 until i > 2 begin
+	
+	loop
+	int j = 1 until j > 2 begin
+		
+		loop 
+		int k = 1 until k > 3 begin
+			
+			op_ind[i][j][k] = 1;
+			
+		k = k + 1;
+		end;
+		
+	j = j + 1;
+	end;
+	
+i = i +1;
+end;
+
+
+################################################################################################################
+
+
+#											 assessment trial presentation
+
+
+################################################################################################################
+
+# number of trials between breaks
+int break_interval = (trial_info.count() - 36) / letter_count;
+
+# trial index at which a break will occur
+int break_tind = 36 + break_interval;
+
+# variable for instructions text
+string instr_caption;
+#variable to represent button 1 and button 2 letter
+string x_side; 
+string n_side;
+
+loop
+int t_ind = 1 until t_ind > trial_info.count()
+begin
+	
+	
+	# determine whether to present instructions or break screens
+	
+	if t_ind == 1 then
+		
+		if x_button == 1 then
+		
+			x_side = "left";
+			n_side = "right";
+			
+		elseif n_button == 1 then
+
+			n_side = "left";
+			x_side = "right";
+			
+		end;
+		
+		instr_caption = "Welcome to the experiment.\n\n You will be presented with a series of trials consisting of\n" +
+															"6 letters in a circle. In the circle there will be either an\n" +
+															"X or an N target letter, if you see an X you should press the " + x_side + " button,\n" +
+															"whereas if you see an N you should press the " + n_side + " button.\n" +
+															"The other letters in the circle are irrelevant. There will also be a letter \n" +
+															"presented on the outside of the letter circle, this too is irrelevant.\n" +
+															"On certain trials there will be an arrow before the letter circle presentation,\n" +
+															"this arrow will always point in the direction of the target letter and you should\n" +
+															"use this to help find the target letter. Please focus on the central fixation cross\n" +
+															"throught the study\n\n" +
+															"Press a button to continue to the rest of the instructions.";
+															
+		
+		instr_text.set_caption(instr_caption);
+		instr_text.redraw();
+		
+		instr_trial.present();
+		
+		instr_caption = "Next you will be presented with some training trials\n" +
+						"in which the letter array will be presented for a long duration\n" +
+						"in order for you to get accustomed to the task\n\n" +
+						"Press a button to begin the training trials.";
+		
+		instr_text.set_caption(instr_caption);
+		instr_text.redraw();
+		
+		instr_trial.present();
+		
+	elseif t_ind == 13 then
+		
+		instr_caption = "Next you will be presented with 24 training trials.\n" +
+						"These are identical to the previous trials, only the\n" +
+						"letters will appear on the screen for a much shorter amount of time.\n" +
+						"Please try to perform the task in the same way previously.\n\n" +
+						"Press a response button to continue";
+		
+		instr_text.set_caption(instr_caption);
+		instr_text.redraw();
+		
+		instr_trial.present();
+		
+	elseif t_ind == 37 then
+	
+		instr_caption = "Next you will be presented with the assessment trials.\n" +
+							 "These are identical to the trials you saw previously.\n\n" +
+							"Press a response button to continue";
+							
+		instr_text.set_caption(instr_caption);
+		instr_text.redraw();
+		
+		instr_trial.present();
+
+	elseif t_ind == break_tind && t_ind < 860 then
+		
+		break_trial_fixed.present();
+		
+		break_trial.present();
+		
+		break_tind = break_tind + break_interval;
+							
+	end;# test whether an instruction or break screen should be presented
+	
+	
+	# set arrow coordinates if it's a cue trial
+	
+	if trial_info[t_ind][2] == 2 then
+		
+		arrow.set_coordinates(arrow_coord[trial_info[t_ind][6]][1][1],arrow_coord[trial_info[t_ind][6]][1][2], arrow_coord[trial_info[t_ind][6]][2][1], arrow_coord[trial_info[t_ind][6]][2][2]);
+		arrow.redraw();
+		
+	end;
+	
+	##################################################################################################
+	
+	
+	######################			letter array display			#########################################
+	
+	
+	###################################################################################################
+	
+	distracter[2].shuffle(1, letter_count - 1);
+
+	# draw letter stimuli
+
+	angle = 0.0 + angle_inc/2.0;
+	
+	int dis_ind = 1; # dis_ind = distracter index
+	
+	letter_pic.add_part(fix,0,0);
+	
+	loop
+	int i = 1
+	until i > letter_count begin
+		# if i is not the target position then draw a non_target
+		if i != trial_info[t_ind][6] then
+			letter_pic.add_part(distracter[trial_info[t_ind][3]][dis_ind], cos(angle) * letter_radius, sin(angle) * letter_radius);
+			dis_ind = dis_ind + 1;
+		else
+			letter_pic.add_part(target[trial_info[t_ind][1]], cos(angle) * letter_radius, sin(angle) * letter_radius);
+		end;
+		
+		angle = angle + angle_inc;
+	i = i + 1;
+	end;
+
+	# add flankers
+	
+	# determine what flanker to add based on flanker type
+	
+	if trial_info[t_ind][4] == 1 then
+		
+		if trial_info[t_ind][1] == 1 then
+			
+			flanker.set_caption("X");
+			
+		elseif trial_info[t_ind][1] == 2 then
+			
+			flanker.set_caption("N");
+			
+		end;
+		
+	elseif trial_info[t_ind][4] == 2 then
+		
+		flanker.set_caption("L");
+		
+	elseif trial_info[t_ind][4] == 3 then
+		
+		if trial_info[t_ind][1] == 1 then
+			
+			flanker.set_caption("N");
+			
+		elseif trial_info[t_ind][1] == 2 then
+			
+			flanker.set_caption("X");
+			
+		end;
+		
+	end;
+	
+	# set flanker fint size
+	flanker.set_font_size(0.8);
+	flanker.redraw();
+	
+	if trial_info[t_ind][5] == 1 then # if position is 1 then add the flanker to the left
+	
+			letter_pic.add_part(flanker, 0 - flanker_offset, 0);
+			
+	elseif trial_info[t_ind][5] == 2 then # if position is 2 then add the flanker to the right
+		
+			letter_pic.add_part(flanker, flanker_offset, 0);
+	
+	end;
+
+	# add target buttons to trial
+	
+	if trial_info[t_ind][1] == 1 then
+		
+		letter_event.set_target_button(x_button);
+
+	elseif trial_info[t_ind][1] == 2 then
+		
+		letter_event.set_target_button(n_button);
+		
+	end;
+
+	# set letter array presentation duration
+	
+	if t_ind <= 12 then
+	
+		letter_event.set_duration(3500);
+	
+	elseif t_ind > 12 then
+	
+		letter_event.set_duration(100);
+	
+	end;
+	
+	letter_event.set_event_code("target letter = " + code[1][trial_info[t_ind][1]] + " | trial_type = " + code[2][trial_info[t_ind][2]] + " | perceptual load = " + code[3][trial_info[t_ind][3]] + " | flanker type = " + code[4][trial_info[t_ind][4]] + " | flanker position = " + code[5][trial_info[t_ind][5]] + " | target position = " + string(trial_info[t_ind][6]));
+
+	##################################################################
+	
+	###############		present trials 	##########################
+	
+	##################################################################
+
+	
+	if trial_info[t_ind][2] == 1 then 
+		
+		no_cue_fix_trial.present();
+		
+	elseif trial_info[t_ind][2] == 2 then
+		
+		cue_fix_trial.present();
+	
+	end;
+	
+	letter_trial.present();
+	
+	# only store rt and validity info in an array if an assessment trial has been presented
+	if t_ind > 36 then
+	
+		int cue_value = trial_info[t_ind][2]; # whether trial is cued or uncued
+		int pload_value = trial_info[t_ind][3]; # whether percept load is low or high
+		int flank_value = trial_info[t_ind][4]; # flanker type, congruent, neutral or incongruent
+		
+		# test if no response was given, if no response put "x" in rt array, if response was given then print rt
+		
+		if stimulus_manager.last_stimulus_data().reaction_time() >= 0 then
+
+			rt[cue_value][pload_value][flank_value][op_ind[cue_value][pload_value][flank_value]] = string(stimulus_manager.last_stimulus_data().reaction_time());
+		
+		elseif stimulus_manager.last_stimulus_data().reaction_time() == 0 then
+			
+			rt[cue_value][pload_value][flank_value][op_ind[cue_value][pload_value][flank_value]] = "x";
+			
+		end;
+		
+		int type = stimulus_manager.last_stimulus_data().type();
+		
+		if type == stimulus_hit then
+		
+			val[cue_value][pload_value][flank_value][op_ind[cue_value][pload_value][flank_value]] = "correct"
+			
+		elseif type == stimulus_incorrect then 
+				
+			val[cue_value][pload_value][flank_value][op_ind[cue_value][pload_value][flank_value]] = "incorrect"
+				
+		elseif type == stimulus_miss then
+
+			val[cue_value][pload_value][flank_value][op_ind[cue_value][pload_value][flank_value]] = "miss"
+				
+		end;
+		
+		# increase the output index of a particular trial type
+		op_ind[cue_value][pload_value][flank_value] = op_ind[cue_value][pload_value][flank_value] + 1;
+	
+	end;# end test if an assessment trial has been presented
+	
+	letter_pic.clear();
+	
+t_ind = t_ind + 1;
+end;
+
+# print rts and validity info
+
+# print name of data file to first line
+behaviour.print("Data File: " + data_file);
+
+behaviour.print("\n");
+
+behaviour.print("pl = perceptual load, con = congruent, neu = neutral, inc = incongruent, flank = flankers");
+
+behaviour.print("\n");
+behaviour.print("Reaction Times");
+behaviour.print("\n");
+
+
+string title;
+title = "Trials";
+title = title + "	no_cue,pl_low,con_flank";
+title = title + "	no_cue,pl_low,neu_flank";
+title = title + "	no_cue,pl_low,inc_flank";
+title = title + "	no_cue,pl_high,con_flank";
+title = title + "	no_cue,pl_high,neu_flank";
+title = title + "	no_cue,pl_high,inc_flank";	
+title = title + "	cue,pl_low,con_flank";
+title = title + "	cue,pl_low,neu_flank";
+title = title + "	cue,pl_low,inc_flank";
+title = title + "	cue,pl_high,con_flank";
+title = title + "	cue,pl_high,neu_flank";
+title = title + "	cue,pl_high,inc_flank";	
+
+# create string variables of the results
+
+string output_rt;
+string output_val;
+
+output_rt = "";
+output_val = "";
+
+loop# trial loop 
+int h = 1 until h > (trial_info.count() - 36)/12
+begin
+	
+	output_rt = output_rt + string(h) + "	";
+	output_val = output_val + string(h) + "	"; 
+	
+	loop# cue loop 
+	int i = 1 until i > 2 
+	begin
+
+		loop# pl_loop
+		int j = 1 until j > 2 
+		begin
+			
+			loop# flanker loop
+			int k = 1 until k > 3 
+			begin
+			
+				output_rt = output_rt + rt[i][j][k][h] + "	";
+				output_val = output_val + val[i][j][k][h] + "	";
+			
+			k = k + 1;
+			end;# flanker loop
+			
+		j = j + 1;
+		end;# pl_loop
+		
+	i = i + 1;
+	end;# cue loop
+	
+	output_rt = output_rt + "\n";
+	output_val = output_val + "\n";
+	
+h = h + 1;
+end;# trial_loop
+
+behaviour.print(title);
+
+behaviour.print("\n");
+
+behaviour.print(output_rt);
+
+behaviour.print("\n");
+behaviour.print("\n");
+behaviour.print("\n");
+
+behaviour.print(title);
+
+behaviour.print("\n");
+
+behaviour.print(output_val);
+
+end_trial.present();
