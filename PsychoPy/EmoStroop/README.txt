@@ -39,18 +39,4 @@ Press SPACE to continue
 
 
 
-This is an n-back task. The n-back task presents stimuli sequentially and require you to decide if the current stimulus is the same as one presented n-numbers previous (or back).  
-
-There are two parts, a 0-back task, and a 2-back task. 
-
-For the 0-back you will indicate if the current number on the screen matches a defined target. 
-
-Press SPACE if it's a target match.
-
-For the 2-back you will indicate if the current number matches the number presented 2 places previous 
-(e.g.  4 6 4 8 9 8 3 1 shows that '4' and '8' are matches in this sequence). 
-
-Press SPACE if the current NUMBER is the same a 2 places previous.
-
-
 * Stimuli developed from the female ANEW dataset, Bradley, M.M., & Lang, P.J. (1999). Affective norms for English words (ANEW): Instruction manual and affective ratings. Technical Report C-1, The Center for Research in Psychophysiology, University of Florida. .
